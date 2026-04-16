@@ -27,5 +27,26 @@ function drawViewport() {
     ctx.font = '12px Arial';
     ctx.fillText('Viewport (Área de Recorte)', X_MIN, Y_MIN - 10);
 }
+/**
+ * Determina el código de región para un punto (x, y)
+ */
+function definirCodigo(x, y) {
+    let codigo = DENTRO; // Empezamos asumiendo que está dentro
 
+    if (x < X_MIN) {
+        codigo |= IZQUIERDA; // Bitwise OR para activar el bit de izquierda
+    } else if (x > X_MAX) {
+        codigo |= DERECHA;   // Activa bit de derecha
+    }
+
+    if (y < Y_MIN) {
+        codigo |= ARRIBA;    // En canvas, Y menor es "más arriba"
+    } else if (y > Y_MAX) {
+        codigo |= ABAJO;     // En canvas, Y mayor es "más abajo"
+    }
+    return codigo;
+}
+
+// Prueba rápida en consola
+console.log("Punto (50, 50) código:", definirCodigo(50, 50).toString(2).padStart(4, '0'));
 drawViewport();
