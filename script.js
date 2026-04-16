@@ -87,9 +87,12 @@ function cohenSutherland(p1, p2) {
         }
     }
 
-    return aceptada
-        ? { p1: { x: x1, y: y1 }, p2: { x: x2, y: y2 } }
-        : null;
+    if (!aceptada) return null;
+
+    return {
+        p1: { x: x1, y: y1 },
+        p2: { x: x2, y: y2 }
+    };
 }
 
 function drawViewport() {
@@ -109,9 +112,23 @@ function render() {
 
     drawViewport();
 
-    // Dibujar líneas originales (sin recorte aún)
-    lineas.forEach(l => {
-        dibujarLinea(l.p1, l.p2, 'gray', 1);
+    lineas.forEach(linea => {
+        // Línea original (gris)
+        dibujarLinea(linea.p1, linea.p2, '#bbb', 1);
+
+        const resultado = cohenSutherland(linea.p1, linea.p2);
+
+        if (resultado) {
+            // Línea recortada (verde)
+            dibujarLinea(resultado.p1, resultado.p2, '#2ecc71', 3);
+
+            // puntos de recorte
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(resultado.p1.x, resultado.p1.y, 3, 0, Math.PI * 2);
+            ctx.arc(resultado.p2.x, resultado.p2.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
     });
 }
 
