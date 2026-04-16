@@ -38,19 +38,40 @@ function cohenSutherland(p1, p2) {
 
     while (true) {
 
-        // CASO 1: Aceptación Trivial (Ambos dentro)
         if ((codigo1 | codigo2) === 0) {
             aceptada = true;
             break;
         } 
-
-        // CASO 2: Rechazo Trivial (comparten región externa)
+        
         else if ((codigo1 & codigo2) !== 0) {
             break; 
         } 
+        
+        else {
+            // CASO 3: Seleccionar un punto fuera
+            let codigoFuera = codigo1 !== 0 ? codigo1 : codigo2;
+            let x, y;
 
-        // CASO 3: Recorte necesario 
-        break; 
+            // Intersección con bordes horizontales
+            if (codigoFuera & ARRIBA) {
+                x = x1 + (x2 - x1) * (Y_MIN - y1) / (y2 - y1);
+                y = Y_MIN;
+            } else if (codigoFuera & ABAJO) {
+                x = x1 + (x2 - x1) * (Y_MAX - y1) / (y2 - y1);
+                y = Y_MAX;
+            }
+
+            // Actualizar punto
+            if (codigoFuera === codigo1) {
+                x1 = x; 
+                y1 = y;
+                codigo1 = definirCodigo(x1, y1);
+            } else {
+                x2 = x; 
+                y2 = y;
+                codigo2 = definirCodigo(x2, y2);
+            }
+        }
     }
 
     return aceptada
