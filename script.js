@@ -122,5 +122,10 @@ function agregarLinea() {
     render();
 }
 
+function limpiarCanvas() {
+    lineas = [];
+    render();
+}
+
 // Inicialización
 render();
