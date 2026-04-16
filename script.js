@@ -37,17 +37,25 @@ function cohenSutherland(p1, p2) {
     let aceptada = false;
 
     while (true) {
-        // CASO 1: Aceptación Trivial (Ambos puntos dentro: 0000 | 0000 = 0)
+
+        // CASO 1: Aceptación Trivial (Ambos dentro)
         if ((codigo1 | codigo2) === 0) {
             aceptada = true;
             break;
         } 
-        
-        // El bucle se rompe aquí por ahora hasta el siguiente commit
+
+        // CASO 2: Rechazo Trivial (comparten región externa)
+        else if ((codigo1 & codigo2) !== 0) {
+            break; 
+        } 
+
+        // CASO 3: Recorte necesario 
         break; 
     }
 
-    return aceptada ? { p1: { x: x1, y: y1 }, p2: { x: x2, y: y2 } } : null;
+    return aceptada
+        ? { p1: { x: x1, y: y1 }, p2: { x: x2, y: y2 } }
+        : null;
 }
 
 function drawViewport() {
