@@ -43,5 +43,27 @@ function drawViewport() {
     ctx.fillText('Viewport (Área de Recorte)', X_MIN, Y_MIN - 10);
 }
 
+//  Función para dibujar una línea simple
+function dibujarLinea(p1, p2, color, grosor = 1) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = grosor;
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+}
+
+//  Renderizado inicial: Dibujamos las líneas sin recortar (en gris)
+function renderInicial() {
+    lineas.forEach(linea => {
+        dibujarLinea(linea.p1, linea.p2, '#ccc', 1);
+        
+        // Dibujamos el nombre de la línea cerca de su P1
+        ctx.fillStyle = '#666';
+        ctx.fillText(linea.nombre, linea.p1.x, linea.p1.y - 5);
+    });
+}
+
+// Ejecutamos el dibujo del viewport y las líneas originales
 drawViewport();
-console.log("Líneas cargadas:", lineas);
+renderInicial();
