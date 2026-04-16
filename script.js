@@ -91,4 +91,22 @@ function drawViewport() {
     ctx.strokeRect(X_MIN, Y_MIN, X_MAX - X_MIN, Y_MAX - Y_MIN);
 }
 
+function renderFinal() {
+    lineas.forEach(linea => {
+        const resultado = cohenSutherland(linea.p1, linea.p2);
+
+        if (resultado) {
+            dibujarLinea(resultado.p1, resultado.p2, '#2ecc71', 3);
+
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(resultado.p1.x, resultado.p1.y, 3, 0, Math.PI * 2);
+            ctx.arc(resultado.p2.x, resultado.p2.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    });
+}
+
+// Inicialización
 drawViewport();
+renderFinal();
