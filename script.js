@@ -6,11 +6,11 @@ const Y_MIN = 100;
 const X_MAX = 350;
 const Y_MAX = 320;
 
-const DENTRO = 0;    // 0000
-const IZQUIERDA = 1; // 0001
-const DERECHA = 2;   // 0010
-const ABAJO = 4;     // 0100
-const ARRIBA = 8;    // 1000
+const DENTRO = 0;
+const IZQUIERDA = 1;
+const DERECHA = 2;
+const ABAJO = 4;
+const ARRIBA = 8;
 
 const lineas = [
     { p1: { x: 50, y: 50 },   p2: { x: 400, y: 400 }, nombre: "L1" },
@@ -26,6 +26,15 @@ function definirCodigo(x, y) {
     if (y < Y_MIN) codigo |= ARRIBA;
     else if (y > Y_MAX) codigo |= ABAJO;
     return codigo;
+}
+
+function dibujarLinea(p1, p2, color = 'black', grosor = 2) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = grosor;
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
 }
 
 function cohenSutherland(p1, p2) {
@@ -44,7 +53,7 @@ function cohenSutherland(p1, p2) {
         } 
         
         else if ((codigo1 & codigo2) !== 0) {
-            break; 
+            break;
         } 
         
         else {
@@ -69,12 +78,10 @@ function cohenSutherland(p1, p2) {
             }
 
             if (codigoFuera === codigo1) {
-                x1 = x; 
-                y1 = y;
+                x1 = x; y1 = y;
                 codigo1 = definirCodigo(x1, y1);
             } else {
-                x2 = x; 
-                y2 = y;
+                x2 = x; y2 = y;
                 codigo2 = definirCodigo(x2, y2);
             }
         }
@@ -93,29 +100,20 @@ function drawViewport() {
     ctx.fillStyle = 'blue';
     ctx.font = '10px Arial';
 
-    // Etiqueta superior izquierda
     ctx.fillText(`(${X_MIN}, ${Y_MIN})`, X_MIN - 40, Y_MIN - 5);
-
-    // Etiqueta inferior derecha
     ctx.fillText(`(${X_MAX}, ${Y_MAX})`, X_MAX + 5, Y_MAX + 15);
 }
 
-function renderFinal() {
-    lineas.forEach(linea => {
-        const resultado = cohenSutherland(linea.p1, linea.p2);
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (resultado) {
-            dibujarLinea(resultado.p1, resultado.p2, '#2ecc71', 3);
+    drawViewport();
 
-            ctx.fillStyle = 'red';
-            ctx.beginPath();
-            ctx.arc(resultado.p1.x, resultado.p1.y, 3, 0, Math.PI * 2);
-            ctx.arc(resultado.p2.x, resultado.p2.y, 3, 0, Math.PI * 2);
-            ctx.fill();
-        }
+    // Dibujar líneas originales (sin recorte aún)
+    lineas.forEach(l => {
+        dibujarLinea(l.p1, l.p2, 'gray', 1);
     });
 }
 
 // Inicialización
-drawViewport();
-renderFinal();
+render();
