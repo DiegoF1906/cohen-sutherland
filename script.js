@@ -48,20 +48,26 @@ function cohenSutherland(p1, p2) {
         } 
         
         else {
-            // CASO 3: Seleccionar un punto fuera
             let codigoFuera = codigo1 !== 0 ? codigo1 : codigo2;
             let x, y;
 
-            // Intersección con bordes horizontales
             if (codigoFuera & ARRIBA) {
                 x = x1 + (x2 - x1) * (Y_MIN - y1) / (y2 - y1);
                 y = Y_MIN;
-            } else if (codigoFuera & ABAJO) {
+            } 
+            else if (codigoFuera & ABAJO) {
                 x = x1 + (x2 - x1) * (Y_MAX - y1) / (y2 - y1);
                 y = Y_MAX;
+            } 
+            else if (codigoFuera & DERECHA) {
+                y = y1 + (y2 - y1) * (X_MAX - x1) / (x2 - x1);
+                x = X_MAX;
+            } 
+            else if (codigoFuera & IZQUIERDA) {
+                y = y1 + (y2 - y1) * (X_MIN - x1) / (x2 - x1);
+                x = X_MIN;
             }
 
-            // Actualizar punto
             if (codigoFuera === codigo1) {
                 x1 = x; 
                 y1 = y;
