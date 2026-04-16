@@ -89,6 +89,15 @@ function drawViewport() {
     ctx.strokeStyle = 'blue';
     ctx.lineWidth = 2;
     ctx.strokeRect(X_MIN, Y_MIN, X_MAX - X_MIN, Y_MAX - Y_MIN);
+
+    ctx.fillStyle = 'blue';
+    ctx.font = '10px Arial';
+
+    // Etiqueta superior izquierda
+    ctx.fillText(`(${X_MIN}, ${Y_MIN})`, X_MIN - 40, Y_MIN - 5);
+
+    // Etiqueta inferior derecha
+    ctx.fillText(`(${X_MAX}, ${Y_MAX})`, X_MAX + 5, Y_MAX + 15);
 }
 
 function renderFinal() {
