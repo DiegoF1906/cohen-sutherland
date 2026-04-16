@@ -12,12 +12,7 @@ const DERECHA = 2;
 const ABAJO = 4;
 const ARRIBA = 8;
 
-const lineas = [
-    { p1: { x: 50, y: 50 },   p2: { x: 400, y: 400 }, nombre: "L1" },
-    { p1: { x: 150, y: 150 }, p2: { x: 250, y: 250 }, nombre: "L2" },
-    { p1: { x: 400, y: 50 },  p2: { x: 300, y: 150 }, nombre: "L3" },
-    { p1: { x: 300, y: 200 }, p2: { x: 450, y: 250 }, nombre: "L4" }
-];
+let lineas = [];
 
 function definirCodigo(x, y) {
     let codigo = DENTRO;
@@ -43,17 +38,15 @@ function cohenSutherland(p1, p2) {
 
     let codigo1 = definirCodigo(x1, y1);
     let codigo2 = definirCodigo(x2, y2);
-    let aceptada = false;
 
     while (true) {
 
         if ((codigo1 | codigo2) === 0) {
-            aceptada = true;
             break;
         } 
         
         else if ((codigo1 & codigo2) !== 0) {
-            break;
+            return null;
         } 
         
         else {
@@ -87,24 +80,13 @@ function cohenSutherland(p1, p2) {
         }
     }
 
-    if (!aceptada) return null;
-
-    return {
-        p1: { x: x1, y: y1 },
-        p2: { x: x2, y: y2 }
-    };
+    return { p1: { x: x1, y: y1 }, p2: { x: x2, y: y2 } };
 }
 
 function drawViewport() {
     ctx.strokeStyle = 'blue';
     ctx.lineWidth = 2;
     ctx.strokeRect(X_MIN, Y_MIN, X_MAX - X_MIN, Y_MAX - Y_MIN);
-
-    ctx.fillStyle = 'blue';
-    ctx.font = '10px Arial';
-
-    ctx.fillText(`(${X_MIN}, ${Y_MIN})`, X_MIN - 40, Y_MIN - 5);
-    ctx.fillText(`(${X_MAX}, ${Y_MAX})`, X_MAX + 5, Y_MAX + 15);
 }
 
 function render() {
@@ -112,24 +94,32 @@ function render() {
 
     drawViewport();
 
-    lineas.forEach(linea => {
-        // Línea original (gris)
-        dibujarLinea(linea.p1, linea.p2, '#bbb', 1);
+    lineas.forEach(l => {
+        const res = cohenSutherland(l.p1, l.p2);
 
-        const resultado = cohenSutherland(linea.p1, linea.p2);
-
-        if (resultado) {
-            // Línea recortada (verde)
-            dibujarLinea(resultado.p1, resultado.p2, '#2ecc71', 3);
-
-            // puntos de recorte
-            ctx.fillStyle = 'red';
-            ctx.beginPath();
-            ctx.arc(resultado.p1.x, resultado.p1.y, 3, 0, Math.PI * 2);
-            ctx.arc(resultado.p2.x, resultado.p2.y, 3, 0, Math.PI * 2);
-            ctx.fill();
+        if (res) {
+            dibujarLinea(res.p1, res.p2, 'green', 3);
         }
     });
+}
+
+function agregarLinea() {
+    const x1 = parseFloat(document.getElementById("x1").value);
+    const y1 = parseFloat(document.getElementById("y1").value);
+    const x2 = parseFloat(document.getElementById("x2").value);
+    const y2 = parseFloat(document.getElementById("y2").value);
+
+    if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) {
+        alert("Ingresa valores válidos");
+        return;
+    }
+
+    lineas.push({
+        p1: { x: x1, y: y1 },
+        p2: { x: x2, y: y2 }
+    });
+
+    render();
 }
 
 // Inicialización
